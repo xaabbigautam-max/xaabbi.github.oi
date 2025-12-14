@@ -1,0 +1,12 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": true,
+    "tasks": {
+      ".indexOn": ["status", "requested_by", "assigned_to", "is_urgent", "needs_approval", "zone", "last_updated"]
+    },
+    "employees": {
+      ".indexOn": ["email", "department", "zone", "role", "is_active"]
+    }
+  }
+}

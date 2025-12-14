@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Firebase Test</title>
+</head>
+<body>
+    <h1>Firebase Connection Test</h1>
+    <div id="status">Testing...</div>
+    <button onclick="testFirebase()">Test Firebase</button>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDYex9rqZxHz0-uoytIOmdIsI5Uwb_TRTw",
+            authDomain: "work-management-ls.firebaseapp.com",
+            databaseURL: "https://work-management-ls-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "work-management-ls",
+            storageBucket: "work-management-ls.firebasestorage.app",
+            messagingSenderId: "322143885128",
+            appId: "1:322143885128:web:218cca78bceca9788a457d"
+        };
+        
+        async function testFirebase() {
+            try {
+                const app = firebase.initializeApp(firebaseConfig);
+                const db = firebase.database();
+                
+                // Test connection
+                const connectedRef = db.ref('.info/connected');
+                connectedRef.on('value', (snap) => {
+                    document.getElementById('status').innerHTML = 
+                        snap.val() ? "✅ CONNECTED to Firebase!" : "❌ DISCONNECTED";
+                });
+                
+                // Try to write data
+                await db.ref('test').set({
+                    message: "Test from web app",
+                    timestamp: Date.now()
+                });
+                
+                document.getElementById('status').innerHTML += "<br>✅ Write successful!";
+                
+                // Read it back
+                const snapshot = await db.ref('test').once('value');
+                document.getElementById('status').innerHTML += "<br>✅ Read successful: " + JSON.stringify(snapshot.val());
+                
+            } catch (error) {
+                document.getElementById('status').innerHTML = "❌ Error: " + error.message;
+                console.error(error);
+            }
+        }
+        
+        // Auto test on load
+        window.onload = testFirebase;
+    </script>
+</body>
+</html>
